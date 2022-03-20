@@ -5,18 +5,18 @@ DSR Tool is an application that is used to display imported models and allow the
 
 ### Features
 - First Person Camera
- - Move around the scene
+  - Move around the scene
 - Interactive User Interface
- - Adjust lighting colour
- - Adjust light positions
- - Turn off lighting techniques
- - Make objects spin
+  - Adjust lighting colour
+  - Adjust light positions
+  - Turn off lighting techniques
+  - Make objects spin
 - 3D Model Importing (With Textures)
 - Background Music
 - Phong Shading
 - Various Lighting Techniques
- - Directional
- - Point
- - Spotlight 
+  - Directional
+  - Point
+  - Spotlight 
 
 ### Screenshots
