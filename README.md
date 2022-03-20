@@ -3,7 +3,7 @@
 ## Project Brief
 DSR Tool is an application that is used to display imported models and allow the user to switch between multiple different shading techiques. The Shading Technique used will be Phong Shading, 3 lighting techniques will also be used. These include: Directional, Point, and Spotlight
 
-# Features
+### Features
 - First Person Camera
  - Move around the scene
 - Interactive User Interface
@@ -19,4 +19,4 @@ DSR Tool is an application that is used to display imported models and allow the
  - Point
  - Spotlight 
 
-# Screenshots
+### Screenshots
