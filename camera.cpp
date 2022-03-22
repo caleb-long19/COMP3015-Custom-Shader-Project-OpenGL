@@ -56,24 +56,27 @@ void Camera::userInputs(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		cameraPosition += cameraSpeed * cameraOrientation;
-		OutputDebugStringW(L"My output string.");
+		std::cout << "Success: Camera Is Moving Forward " << std::endl;
 	}
 
 	//Move Left
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		cameraPosition += cameraSpeed * -glm::normalize(glm::cross(cameraOrientation, Up));
+		std::cout << "Success: Camera Is Moving Left " << std::endl;
 	}
 
 	//Move Down
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		cameraPosition += cameraSpeed * -cameraOrientation;
+		std::cout << "Success: Camera Is Moving Backwards " << std::endl;
 	}
 
 	//Move Right
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		cameraPosition += cameraSpeed * glm::normalize(glm::cross(cameraOrientation, Up));
+		std::cout << "Success: Camera Is Moving Right " << std::endl;
 	}
 }

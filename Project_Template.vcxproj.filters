@@ -16,12 +16,6 @@
     <Filter Include="media">
       <UniqueIdentifier>{81e137b1-4ea3-4abe-829a-6f64bc994cb6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="helper">
-      <UniqueIdentifier>{6efe3a76-edc0-4f6f-b45a-1869ab863c2c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="helper\stb">
-      <UniqueIdentifier>{2eeab77b-5d84-4893-b9df-1b2ed789b189}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\imgui">
       <UniqueIdentifier>{8d473a01-e350-48ec-9ba3-1f4bb27a1e35}</UniqueIdentifier>
     </Filter>
@@ -31,21 +25,21 @@
     <Filter Include="Resource Files\shaders">
       <UniqueIdentifier>{d6ca4009-877c-4d89-9774-b4c1370f02f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="media\audio">
+      <UniqueIdentifier>{7c39fc72-73b2-4269-95d2-4803a3399622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="media\models">
+      <UniqueIdentifier>{d75e5fca-bfe7-4575-896c-51731a739e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="media\skybox">
+      <UniqueIdentifier>{f1f9038b-737b-46fc-b2f9-d7cc9e23a09c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="helper\glutils.cpp">
-      <Filter>helper</Filter>
-    </ClCompile>
-    <ClCompile Include="helper\glslprogram.cpp">
-      <Filter>helper</Filter>
-    </ClCompile>
-    <ClCompile Include="scenebasic_uniform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui_tables.cpp">
@@ -77,35 +71,20 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default_shader.frag">
+    <None Include="skyboxShader.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="default_shader.vert">
+    <None Include="skyboxShader.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="blinn_phong_shader.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="blinn_phong_shader.frag">
       <Filter>Resource Files\shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="helper\scene.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\scenerunner.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\stb\stb_image.h">
-      <Filter>helper\stb</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\stb\stb_image_write.h">
-      <Filter>helper\stb</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\glutils.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="helper\glslprogram.h">
-      <Filter>helper</Filter>
-    </ClInclude>
-    <ClInclude Include="scenebasic_uniform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\imstb_rectpack.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
@@ -145,7 +124,27 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="C:\Users\caleb\Downloads\Dreamer-by-Hazy.mp3">
-      <Filter>media</Filter>
+      <Filter>media\audio</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Front.jpg">
+      <Filter>media\skybox</Filter>
+    </Image>
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Right.jpg">
+      <Filter>media\skybox</Filter>
+    </Image>
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Back.jpg">
+      <Filter>media\skybox</Filter>
+    </Image>
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Bottom.jpg">
+      <Filter>media\skybox</Filter>
+    </Image>
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Top.jpg">
+      <Filter>media\skybox</Filter>
+    </Image>
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Left.jpg">
+      <Filter>media\skybox</Filter>
+    </Image>
   </ItemGroup>
 </Project>

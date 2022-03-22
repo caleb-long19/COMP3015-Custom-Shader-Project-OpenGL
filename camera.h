@@ -31,7 +31,6 @@ public:
 	int windowHeight;
 
 	float cameraSpeed = 40.0;
-	float cameraPosZ = 35.0;
 
 	// Camera constructor to set up initial values
 	Camera(int winWidth, int winHeight, glm::vec3 camPosition);

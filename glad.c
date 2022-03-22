@@ -326,7 +326,7 @@ PFNGLCLEARBUFFERFIPROC glad_glClearBufferfi = NULL;
 PFNGLCLEARBUFFERFVPROC glad_glClearBufferfv = NULL;
 PFNGLCLEARBUFFERIVPROC glad_glClearBufferiv = NULL;
 PFNGLCLEARBUFFERUIVPROC glad_glClearBufferuiv = NULL;
-PFNGLCLEARCOLORPROC glad_glClearColor = NULL;
+PFNGLCLEARCOLORPROC clear_Colour = NULL;
 PFNGLCLEARDEPTHPROC glad_glClearDepth = NULL;
 PFNGLCLEARDEPTHFPROC glad_glClearDepthf = NULL;
 PFNGLCLEARNAMEDBUFFERDATAPROC glad_glClearNamedBufferData = NULL;
@@ -985,7 +985,7 @@ static void load_GL_VERSION_1_0(GLADloadproc load) {
 	glad_glTexImage2D = (PFNGLTEXIMAGE2DPROC)load("glTexImage2D");
 	glad_glDrawBuffer = (PFNGLDRAWBUFFERPROC)load("glDrawBuffer");
 	glad_glClear = (PFNGLCLEARPROC)load("glClear");
-	glad_glClearColor = (PFNGLCLEARCOLORPROC)load("glClearColor");
+	clear_Colour = (PFNGLCLEARCOLORPROC)load("glClearColor");
 	glad_glClearStencil = (PFNGLCLEARSTENCILPROC)load("glClearStencil");
 	glad_glClearDepth = (PFNGLCLEARDEPTHPROC)load("glClearDepth");
 	glad_glStencilMask = (PFNGLSTENCILMASKPROC)load("glStencilMask");

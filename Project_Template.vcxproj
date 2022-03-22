@@ -157,8 +157,6 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="helper\glslprogram.cpp" />
-    <ClCompile Include="helper\glutils.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -172,22 +170,17 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="scenebasic_uniform.cpp" />
     <ClCompile Include="shaderLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="default_shader.frag" />
-    <None Include="default_shader.vert" />
+    <None Include="blinn_phong_shader.frag" />
+    <None Include="blinn_phong_shader.vert" />
+    <None Include="skyboxShader.frag" />
+    <None Include="skyboxShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\caleb\Downloads\imgui-1.87\imgui-1.87\backends\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="camera.h" />
-    <ClInclude Include="helper\glslprogram.h" />
-    <ClInclude Include="helper\glutils.h" />
-    <ClInclude Include="helper\scene.h" />
-    <ClInclude Include="helper\scenerunner.h" />
-    <ClInclude Include="helper\stb\stb_image.h" />
-    <ClInclude Include="helper\stb\stb_image_write.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glfw.h" />
@@ -197,11 +190,18 @@
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="loadMesh.h" />
-    <ClInclude Include="scenebasic_uniform.h" />
     <ClInclude Include="shaderLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="C:\Users\caleb\Downloads\Dreamer-by-Hazy.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Back.jpg" />
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Bottom.jpg" />
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Front.jpg" />
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Left.jpg" />
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Right.jpg" />
+    <Image Include="C:\Users\caleb\Downloads\Skybox_Top.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
