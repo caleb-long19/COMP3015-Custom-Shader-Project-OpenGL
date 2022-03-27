@@ -11,9 +11,10 @@
 #include <fstream>
 #include <iostream>
 
+GLFWwindow* window;
+
 class SceneRunner {
 private:
-    GLFWwindow * window;
     int fbw, fbh;
 	bool debug;           // Set true to enable debug messages
 
@@ -41,7 +42,7 @@ public:
         }
 
         // Open the window
-        window = glfwCreateWindow( WIN_WIDTH, WIN_HEIGHT, windowTitle.c_str(), NULL, NULL );
+        window = glfwCreateWindow( 1280, 800, windowTitle.c_str(), NULL, NULL );
         if( ! window ) {
 			std::cerr << "Unable to create OpenGL context." << std::endl;
             glfwTerminate();

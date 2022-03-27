@@ -29,7 +29,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "D:\Program Files (x86)\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -S"G:\GitHub Repositories\COMP3015-Custom-Shader-Project-OpenGL\dependencies\include\glm" -B"G:\GitHub Repositories\COMP3015-Custom-Shader-Project-OpenGL\dependencies\include\glm\out\build\x64-Debug"
+  command = "D:\Program Files (x86)\Visual Studio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -S"G:\GitHub Repositories\COMP3015-Lab_Coursework\Lab_Projects\dependencies\include\glm" -B"G:\GitHub Repositories\COMP3015-Lab_Coursework\Lab_Projects\dependencies\include\glm\out\build\x64-Debug"
   description = Re-running CMake...
   generator = 1
 
