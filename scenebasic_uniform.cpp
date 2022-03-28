@@ -16,7 +16,7 @@ using glm::mat4;
 
 // Switch Shaders on and off
 bool switchShader_to_blinnPhongSpotlight = false;
-bool switchShader_to_bpToonSpotlight = false;
+bool switchShader_to_bpToonShader = false;
 bool switchShader_to_phongDirectional = false;
 
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
     //Will wait for user input to decide what shader they wish to experience
     if (shaderTypeInput == "T" || shaderTypeInput == "t")
     {
-        switchShader_to_bpToonSpotlight = true;
+        switchShader_to_bpToonShader = true;
     }
     else if (shaderTypeInput == "B" || shaderTypeInput == "b")
     {
@@ -163,7 +163,7 @@ void SceneBasic_Uniform::compile()
 
 
     // Load, Link, and activate the Toon Shader (Directional Lighting) if user chooses "T"
-    if (switchShader_to_bpToonSpotlight == true)
+    if (switchShader_to_bpToonShader == true)
     {
         try {
             shader.compileShader("shader/bpToonShader.vert");
@@ -412,9 +412,9 @@ void SceneBasic_Uniform::render()
         ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
         //Change the intensity/colour values of the diffuse/specular/ambient for the material uniform structure
-        ImGui::ColorEdit3("Diffuse Material Intensity: ", (float*)&diffuseValue);
-        ImGui::ColorEdit3("Specular Material Intensity: ", (float*)&specularValue);
-        ImGui::ColorEdit3("Ambient Material Intensity: ", (float*)&ambientValue);
+        ImGui::ColorEdit3("Diffuse Material Reflectivity: ", (float*)&diffuseValue);
+        ImGui::ColorEdit3("Specular Material Reflectivity: ", (float*)&specularValue);
+        ImGui::ColorEdit3("Ambient Material Reflectivity: ", (float*)&ambientValue);
         ImGui::SliderFloat("Specular Shininess Intensity: ", (float*)&specularShininessValue, 1, 200);
 
         ImGui::Dummy(ImVec2(0.0f, 20.0f));
@@ -480,7 +480,7 @@ void SceneBasic_Uniform::resize(int w, int h)
 void SceneBasic_Uniform::refreshShader()
 {
 
-    //Setup the direction of the camera
+    //Setup the direction of the camera - for the bling phong normal texture shader 
     mat4 directionalView = glm::lookAt(vec3(4.0f, 4.0f, 6.5f), vec3(0.0f, 0.75f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
     view = glm::lookAt(vec3(5.0f, 5.0f, 7.5f), vec3(0.0f, 0.75f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
 

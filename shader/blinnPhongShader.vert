@@ -17,7 +17,7 @@ layout (location = 3) in vec4 VertexTangent;
 
 
 uniform struct LightInfo {
-  // Light position in cam. coords.
+  // Light position in cam coords.
   vec4 Position;
 
   //Diffuse & Spectural
@@ -50,7 +50,7 @@ uniform mat4 MVP;
 
 void main() {
 
-    // Transform normal and tangent to eye space
+    // Transform normal and tangent to eye space coordinates
     vec3 norm = normalize(NormalMatrix * VertexNormal);
     vec3 tang = normalize(NormalMatrix * vec3(VertexTangent));
 
