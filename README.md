@@ -1,22 +1,49 @@
 # Dynamic Shader Representation Tool - DSRT
 
 ## Project Brief
-DSR Tool is an application that is used to display imported models and allow the user to switch between multiple different shading techiques. The Shading Technique used will be Phong Shading, 3 lighting techniques will also be used. These include: Directional, Point, and Spotlight
+DSR Tool is an application that is used to display imported models and allow the user to switch between multiple different shading techiques. The Shading Technique used will be Phong Shading, Blinn Phong Shading, & Toon Shading, 2 lighting techniques will also be used. These include: Directional, and Spotlight
 
 ### Features
 - First Person Camera
-  - Move around the scene
 - Interactive User Interface
-  - Adjust lighting colour
-  - Adjust light positions
-  - Turn off lighting techniques
-  - Make objects spin
-- 3D Model Importing (With Textures)
+  - Choose your shader on launch 
+  - Turn off lighting animations
+  - Turn off music
+  - Exit Application
+- Imported 3D Low-Poly Models (With textures)
 - Background Music
 - Phong Shading
+- Blinn Phong Shading
+- Toon Shading
 - Various Lighting Techniques
   - Directional
-  - Point
   - Spotlight 
+- Regular Textures (Custom Textures - Made via Photoshop)
+- Normal Textures (Ogre Model - Given via Lab Work) 
 
 ### Screenshots
+#### Toon Shading
+
+
+#### Blinn Phong Normal Texture Shading
+
+
+#### Phong Shading
+
+
+### References
+#### YouTube Channels
+ - https://www.youtube.com/c/VictorGordan - Victor Gordon
+ - https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw - The Cherno
+ - https://www.youtube.com/channel/UCCIfx6nIIWeOCogxGg4j3xQ - Michael Grieco
+ - https://www.youtube.com/channel/UC4EJN2OSNdl-mSxGjitRvyA - Code, Tech, and Tutorials
+
+#### Books
+ - OpenGL Shading Lagauge Cookbooks - David Wolff
+ - OpenGL Super Bible - Graham Sellers
+ - Learn OpenGL (Print Edition) - Frahaan Hussain
+
+#### Websites
+ - https://learnopengl.com/ - Joey de Vries
+ - https://www.khronos.org/opengl/ - Kronos Group
+ - Plymouth University DLE Resources - Marius Varga
