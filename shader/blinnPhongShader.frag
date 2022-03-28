@@ -1,6 +1,6 @@
 #version 460
 
-// THIS CURRENTLY CONTAINS THE SPOTLIGHT BLINNPHONG MODEL - LAB 3
+//Information is retrived from the scenebasic_uniform.cpp
 
 in vec3 LightDir;
 in vec2 TexCoord;
@@ -11,40 +11,32 @@ layout(binding=1) uniform sampler2D NormalMapTex;
 
 
 uniform struct SpotLightInformation {
-    // Eye coordinate location
-    vec4 Position;   
+    vec4 Position; // Eye coordinate Location
 
-    // Diffuse & Specular Intensity
-    vec3 L; 
+    vec3 L; // Diffuse & Specular Intensity
 
-    //Ambience Intensity
-    vec3 La;
+    vec3 La; //Ambience Intensity
 
-    //Spoitlight direction (Eye coordinates)
-    vec3 Direction;
+    vec3 Direction; //Spoitlight direction (Eye coordinates)
     
-    // Angular Attenuation
-    float Exponent;
+    float Exponent; // Angular Attenuation
 
-    // Angle Cutoff
-    float Cutoff;
+    float Cutoff; // Angle Cutoff
 } Spot;
 
 
+
 uniform struct MaterialInformation {
-  // Ambient reflectivity
-  vec3 Ka;
+  vec3 Ka; // Ambient Reflectivity
 
-  // Diffuse reflectivity
-  vec3 Kd;
+  vec3 Kd; // Diffuse Reflectivity
 
-  // Specular reflectivity
-  vec3 Ks;
+  vec3 Ks; // Specular Reflectivity
 
-  // Specular shininess factor
-  float Shininess;
+  float Shininess; // Specular Shininess
 
 } Material;
+
 
 
 layout( location = 0 ) out vec4 FragColor;
@@ -52,44 +44,67 @@ layout( location = 0 ) out vec4 FragColor;
 
 vec3 blinnPhongSpot(vec3 n) {  
 
+  //Diffuse & Specular Vectors
   vec3 diffuse;
   vec3 spec;
 
+  //Calculate the texture we want to sample with the coordinates of the texture
   vec3 texColor = texture(ColorTex, TexCoord).rgb;
-    
+  
+  //Calculate Ambient Lighting - Acquire Spotlight Ambient Uniform Value
   vec3 ambient = Spot.La * texColor;
 
-  vec3 s = normalize(LightDir);
+  //Calculate Specular Lighting
+  vec3 specular = normalize(LightDir);
 
-  float cosAng = dot(-s, normalize(Spot.Direction));
+  //Calculate/Store the dot product (Measures direction of two vectors) of Specular & Spotlight Direction
+  float cosAng = dot(-specular, normalize(Spot.Direction));
+
+  //Calculate the trigonometric angle of cosine angle and store inside angle
   float angle = acos(cosAng);
+
+  //Size of Spotlight
   float spotScale = 0.0;
 
+  //Check if our angle is greater >= to 0 and less than the cutoff point of the spotlight
   if(angle >= 0.0 && angle < Spot.Cutoff) {
 
+    //Calculate the cosine angle raised to the power of the Exponent value and store in spotScale
     spotScale = pow(cosAng, Spot.Exponent);
 
-    float sDotN = max( dot(s,n), 0.0);
+    //Store the greatest dot product value (Scalar) of specular & normal
+    float sDotN = max(dot(specular,n), 0.0);
 
+    //Calculate Diffuse Lighting with the texColour and max dot product
     diffuse = texColor * sDotN;
 
+    //Calculate Specular Lighitng
     spec = vec3(0.0);
-    if( sDotN > 0.0 ) 
+    if(sDotN > 0.0) 
     {
+      //Calculate Direction
       vec3 v = normalize(ViewDir);
-      vec3 h = normalize(v + s);
 
-      spec = Material.Ks * pow( max(dot(h,n), 0.0 ), Material.Shininess);
+      //Calculate halfway direction
+      vec3 h = normalize(v + specular);
+
+      //Calculate clamped dot product of our normal and halfway direction - retrieve cosine angle between them
+      spec = Material.Ks * pow(max(dot(h,n), 0.0), Material.Shininess);
     }
 
   }
+  //Calculate the blinn phong model - Ambient + Diffuse + Specular (Blinn Phong angles are measured between the normal and halfway vector)
   return ambient + spotScale * Spot.L * (diffuse + spec);
 }
 
 void main() 
 {
+  //Calculate the norm by acquiring the normal texture sample along with the coordinates of the texture
   vec3 norm = texture(NormalMapTex, TexCoord).xyz;
+
+  //Set the normal map range
   norm.xy = 2.0 * norm.xy - 1.0;
 
+  //Pass the result into FragColour
   FragColor = vec4(blinnPhongSpot(norm), 1.0);
 }

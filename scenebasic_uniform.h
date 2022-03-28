@@ -2,7 +2,6 @@
 #define SCENEBASIC_UNIFORM_H
 
 #include "helper/scene.h"
-#include "helper/plane.h"
 #include "helper/objmesh.h"
 #include "helper/skybox.h"
 
@@ -20,8 +19,6 @@ using namespace irrklang;
 #include "helper/glslprogram.h"
 #include "helper/texture.h"
 
-#include "helper/torus.h"
-#include "helper/teapot.h"
 #include <glm/glm.hpp>
 
 class SceneBasic_Uniform : public Scene
@@ -36,8 +33,11 @@ private:
 
     std::unique_ptr<ObjMesh> ogre; //Ogre mesh
 
-    //Angle (used for animating objects e.g. lighting position)
+    //Angle (used for animating objects e.g. lighting position), rotation speeds
     float angle, tPrev, rotSpeed;
+
+    //Float values for Uniform Data
+    float specularShininessValue = 20.0f, spotExponentValue = 20.0f, spotCutoffValue = 30.0f, fogMinDistanceValue = 0.0f, fogMaxDistanceValue = 11.5f;
 
     void setMatrices();
     void compile();
