@@ -47,7 +47,7 @@ After entering your shading choice, you will greeted with an animated scene that
 lighting settings, material settings, colours, fog distance and more.
 
 #### Link to YouTube Video:
-
+https://www.youtube.com/watch?v=NYuAtj07los
 
 ### Screenshots
 #### User Interface
