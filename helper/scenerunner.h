@@ -42,7 +42,7 @@ public:
         }
 
         // Open the window
-        window = glfwCreateWindow( 1280, 800, windowTitle.c_str(), NULL, NULL );
+        window = glfwCreateWindow( 1280, 900, windowTitle.c_str(), NULL, NULL );
         if( ! window ) {
 			std::cerr << "Unable to create OpenGL context." << std::endl;
             glfwTerminate();
@@ -59,7 +59,7 @@ public:
         GLUtils::dumpGLInfo();
 
         // Initialization
-        glClearColor(0.5f,0.5f,0.5f,1.0f);
+        glClearColor(0.2f, 0.5f, 0.9f, 0.2f);
 #ifndef __APPLE__
 		if (debug) {
 			glDebugMessageCallback(GLUtils::debugCallback, nullptr);

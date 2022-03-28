@@ -4,6 +4,7 @@
 #include "helper/scene.h"
 #include "helper/plane.h"
 #include "helper/objmesh.h"
+#include "helper/skybox.h"
 
 // Sound Library - Used for background music
 #include <irrklang/irrklang.h>
@@ -17,6 +18,7 @@ using namespace irrklang;
 
 #include <glad/glad.h>
 #include "helper/glslprogram.h"
+#include "helper/texture.h"
 
 #include "helper/torus.h"
 #include "helper/teapot.h"
@@ -26,21 +28,16 @@ class SceneBasic_Uniform : public Scene
 {
 private:
     GLSLProgram shader;
-    
-    //Coded Meshes
-    Torus torus;
-    Teapot teapot;
-    Plane plane; //plane surface
 
     //Imported Meshes
     std::unique_ptr<ObjMesh> houseMesh; //House mesh
     std::unique_ptr<ObjMesh> islandMesh; //Island mesh
     std::unique_ptr<ObjMesh> treeMesh; //Tree mesh
 
-    //Angle (used for animating objects e.g. lighting position)
-    float angle;
+    std::unique_ptr<ObjMesh> ogre; //Ogre mesh
 
-    float tPrev;
+    //Angle (used for animating objects e.g. lighting position)
+    float angle, tPrev, rotSpeed;
 
     void setMatrices();
     void compile();
@@ -50,6 +47,9 @@ public:
 
     void initScene();
     void refreshShader();
+    void toggleMusic();
+    void ImGuiSetup();
+    void sceneShaderSetup();
     void update( float t );
     void render();
     void resize(int, int);

@@ -174,7 +174,6 @@
     <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="scenebasic_uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,14 +183,12 @@
     <None Include="C:\Users\caleb\Downloads\COMP3015\Lab 4\Lab 4 Files\Additional files\texture\cube\pisa-hdr\pisa_posx.hdr" />
     <None Include="C:\Users\caleb\Downloads\COMP3015\Lab 4\Lab 4 Files\Additional files\texture\cube\pisa-hdr\pisa_posy.hdr" />
     <None Include="C:\Users\caleb\Downloads\COMP3015\Lab 4\Lab 4 Files\Additional files\texture\cube\pisa-hdr\pisa_posz.hdr" />
-    <None Include="shader\basic_uniform.frag" />
-    <None Include="shader\basic_uniform.vert" />
     <None Include="shader\blinnPhongShader.frag" />
     <None Include="shader\blinnPhongShader.vert" />
     <None Include="shader\bpToonShader.frag" />
     <None Include="shader\bpToonShader.vert" />
-    <None Include="shader\flatShader.frag" />
-    <None Include="shader\flatShader.vert" />
+    <None Include="shader\phongShader.frag" />
+    <None Include="shader\phongShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="helper\aabb.h" />

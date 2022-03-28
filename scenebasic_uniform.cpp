@@ -14,48 +14,67 @@ using glm::mat3;
 using glm::mat4;
 
 
-bool switchShader_to_blinnPhongSpotlight = true;
+// Switch Shaders on and off
+bool switchShader_to_blinnPhongSpotlight = false;
 bool switchShader_to_bpToonSpotlight = false;
 bool switchShader_to_phongDirectional = false;
 
 
-glm::vec3 teapotColour(1.0f, 0.0f, 0.0f);
-glm::vec3 torusColour(0.7f, 1.0f, 0.3f);
-glm::vec3 planeColour(0.5f, 0.3f, 0.9f);
-
-glm::vec3 moveDirectionLight(1.0f, 0.0f, 0.0f);
-glm::vec3 moveSpotlight(0.7f, 1.0f, 0.3f);
-
+//Bool to turn music on or off
+bool toggleCurrentMusic = true;
 
 
 // Start the sound engine
-ISoundEngine* soundEngine = createIrrKlangDevice();
 ISoundEngine* backgoundMusic = createIrrKlangDevice();
+ISound* music;
 
 
-
-//constructor for torus
+std::string shaderTypeInput;
 
 SceneBasic_Uniform::SceneBasic_Uniform() : 
-    tPrev(0),
-    plane(50.0f, 50.0f, 1, 1),
-    teapot(14, glm::mat4(1.0f)),
-    torus(1.5f * 1.5f, 0.75f * 0.75f, 10, 10)
-
+    angle(0.0f), 
+    tPrev(0.0f), 
+    rotSpeed(glm::pi<float>() / 8.0f)
 {
-    houseMesh = ObjMesh::load("media/models/house_low/House_Model.obj", true);
-    islandMesh = ObjMesh::load("media/models/island_low/Island_Model.obj", true);
-    treeMesh = ObjMesh::load("media/models/tree_low/Tree_Model.obj", true);
+    //Custom Models
+    houseMesh = ObjMesh::load("media/models/House_Model.obj", true);
+    islandMesh = ObjMesh::load("media/models/Island_Model.obj", true);
+    treeMesh = ObjMesh::load("media/models/Tree_Model.obj", true);
+
+    //Third-Party Models
+    ogre = ObjMesh::load("media/bs_ears.obj", false, true);
 }
 
 
-//constructor for teapot
-//SceneBasic_Uniform::SceneBasic_Uniform() : teapot(13, glm::translate(mat4(1.0f), vec3(0.0f, 1.5f, 0.25f))) {}
 
 
 int main(int argc, char* argv[])
 {
-    SceneRunner runner("Shader_Basics");
+    std::cout << "PLEASE CHOOSE THE SHADER TYPE YOU WISH TO EXPERIENCE: " << std::endl;
+    std::cout << "For The Toon Shader: Press T" << std::endl;
+    std::cout << "For The Blinn Phong Spotlight (Normals) Shader: Press B" << std::endl;
+    std::cout << "For The Phong Direction Lighting Shader: Press P" << std::endl;
+    std::cin >> shaderTypeInput;
+
+    if (shaderTypeInput == "T" || shaderTypeInput == "t")
+    {
+        switchShader_to_bpToonSpotlight = true;
+    }
+    else if (shaderTypeInput == "B" || shaderTypeInput == "b")
+    {
+        switchShader_to_blinnPhongSpotlight = true;
+    }
+    else if (shaderTypeInput == "P" || shaderTypeInput == "p")
+    {
+        switchShader_to_phongDirectional = true;
+    }
+    else 
+    {
+        std::cout << "WRONG INPUT! " << std::endl;
+        exit(EXIT_SUCCESS);
+    }
+
+    SceneRunner runner("A Cabin In The Woods...");
 
     std::unique_ptr<Scene> scene;
 
@@ -67,69 +86,14 @@ int main(int argc, char* argv[])
 
 void SceneBasic_Uniform::initScene()
 {
+
     compile();
     glEnable(GL_DEPTH_TEST);
-
     refreshShader();
-
-    #pragma region Irrklang & ImGui Initilisation
-    // Initialising ImGUI
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init();
-
-
-
-    // Loop background music in game and set the volume
-    ISound* music = soundEngine->play2D("media/audio/Dreamer-by-Hazy.flac", true, false, true);
-    music->setVolume(0.05f);
-    #pragma endregion
-
+    ImGuiSetup();
+    toggleMusic();
 }
 
-
-void SceneBasic_Uniform::refreshShader()
-{
-    if (switchShader_to_phongDirectional == true)
-    {
-        view = glm::lookAt(vec3(4.0f, 4.0f, 6.5f), vec3(0.0f, 0.75f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        projection = mat4(1.0f);
-
-        angle = 0.0;
-
-        shader.setUniform("Light.Position", view * glm::vec4(1.0f, 5.0f, 0.0f, 0.0f));
-        shader.setUniform("Light.L", vec3(0.8f, 0.8f, 0.8f));
-        shader.setUniform("Light.La", vec3(0.1f));
-    }
-
-    if (switchShader_to_blinnPhongSpotlight == true)
-    {
-        view = glm::lookAt(vec3(5.0f, 5.0f, 7.5f), vec3(0.0f, 0.75f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        projection = mat4(1.0f);
-
-        angle = 0.0;
-
-        shader.setUniform("Spot.L", vec3(0.6f));
-        shader.setUniform("Spot.La", vec3(1.0f));
-        shader.setUniform("Spot.Exponent", 50.0f);
-        shader.setUniform("Spot.Cutoff", glm::radians(40.0f));
-    }
-
-
-    if (switchShader_to_bpToonSpotlight == true)
-    {
-        view = glm::lookAt(vec3(4.0f, 4.0f, 6.5f), vec3(0.0f, 0.75f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-        projection = mat4(1.0f);
-
-        angle = 0.0;
-
-        shader.setUniform("Light.L", vec3(0.9f));
-        shader.setUniform("Light.La", vec3(0.2f));
-    }
-}
 
 
 
@@ -139,8 +103,8 @@ void SceneBasic_Uniform::compile()
     if (switchShader_to_phongDirectional == true)
     {
         try {
-            shader.compileShader("shader/basic_uniform.vert");
-            shader.compileShader("shader/basic_uniform.frag");
+            shader.compileShader("shader/phongShader.vert");
+            shader.compileShader("shader/phongShader.frag");
             shader.link();
             shader.use();
         }
@@ -149,6 +113,8 @@ void SceneBasic_Uniform::compile()
             exit(EXIT_FAILURE);
         }
     }
+
+
 
     // SWITCH TO SPOTLIGHT SHADER - IF TRUE
     if (switchShader_to_blinnPhongSpotlight == true)
@@ -164,6 +130,8 @@ void SceneBasic_Uniform::compile()
             exit(EXIT_FAILURE);
         }
     }
+
+
 
     // SWITCH TO SPOTLIGHT TOON SHADER - IF TRUE
     if (switchShader_to_bpToonSpotlight == true)
@@ -181,174 +149,234 @@ void SceneBasic_Uniform::compile()
     }
 }
 
+
+
+
 void SceneBasic_Uniform::update(float t)
 {
-    if (switchShader_to_blinnPhongSpotlight == true || switchShader_to_bpToonSpotlight == true || switchShader_to_phongDirectional == true)
-    {
-        //update your angle here
-        float deltaT = t - tPrev;
-        if (tPrev == 0.0f) deltaT = 0.0f;
-        tPrev = t;
+    //update your angle here
+    float deltaT = t - tPrev;
+    if (tPrev == 0.0f) deltaT = 0.0f;
+    tPrev = t;
 
-        angle += 1.0f * deltaT;
+    if (this->m_animate)
+    {
+        angle += 0.8f * deltaT;
         if (angle > glm::two_pi<float>()) angle -= glm::two_pi<float>();
     }
 
 }
 
+
+
+
 void SceneBasic_Uniform::render()
 {
   
+    // THIS IS THE SPOTLIGHT SETTINGS
     #pragma region BLINN PHONG SHADER SETTINGS & MODELS
-    //THIS IS THE DIRECTIONAL CODE
-    if (switchShader_to_phongDirectional == true)
-    {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        vec4 lightPos = vec4(15.0f * cos(angle), 15.0f, 15.0f * sin(angle), 1.0f);
-        shader.setUniform("Light.Position", view * lightPos);
+    //Animate the direct lighting position each loop
+    vec4 directLight = vec4(15.0f * cos(angle), 15.0f, 15.0f * sin(angle), 1.0f);
+    shader.setUniform("Light.Position", view * directLight);
 
 
-        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
-        shader.setUniform("Material.Ks", 0.9f, 0.9f, 0.9f);
-        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
-        shader.setUniform("Material.Shininess", 180.0f);
+    //Animate the spotlight lighting position each loop
+    vec4 lightPos = vec4(15.0f * cos(angle), 15.0f, 15.0f * sin(angle), 1.0f);
+    shader.setUniform("Spot.Position", vec3(view * lightPos));
 
+
+    //Set the Direction for the spot light
+    mat3 normalMatrix = mat3(vec3(view[0]), vec3(view[1]), vec3(view[2]));
+    shader.setUniform("Spot.Direction", normalMatrix * vec3(-lightPos));
+    #pragma endregion
+
+    if (switchShader_to_blinnPhongSpotlight == true) {
+        //Alter the Diffuse/Spectural/Ambient Light Reflective Power
+        //Alter the Shininess (Glossy Look) of Spectural Light
+        shader.setUniform("Material.Ks", 0.3f, 0.3f, 0.3f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
+        // Alter the Poisition/Rotation/Size of the Mesh/Model
         model = mat4(1.0f);
-        model = glm::translate(model, vec3(1.0f, 1.0f, 1.0f));
+        model = glm::translate(model, vec3(3.0f, 4.0f, 5.0f));
+        model = glm::rotate(model, glm::radians(70.0f), vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
-        model = glm::scale(model, vec3(0.2f, 0.2f, 0.2f));
+        model = glm::scale(model, vec3(2.4f, 2.4f, 2.4f));
+
+        setMatrices();
+        ogre->render();
+    }
+    else
+    {
+     #pragma region House Model Settings
+        // Alter the Diffuse/Spectural/Ambient Light Reflective Power
+        // Alter the Shininess (Glossy Look) of Spectural Light
+        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
+        shader.setUniform("Material.Ks", 0.3f, 0.3f, 0.3f);
+        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
+        // Alter the Poisition/Rotation/Size of the Mesh/Model
+        model = mat4(1.0f);
+        model = glm::translate(model, vec3(2.0f, 5.1f, -1.5f));
+        model = glm::rotate(model, glm::radians(85.0f), vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, vec3(0.4f, 0.4f, 0.4f));
+
+        //Load Matrices Settings & Render House Mesh
         setMatrices();
         houseMesh->render();
 
+    #pragma endregion
 
 
-
+     #pragma region Island Model Settings
+        // Alter the Diffuse/Spectural/Ambient Light Reflective Power
+        // Alter the Shininess (Glossy Look) of Spectural Light
         shader.setUniform("Material.Kd", vec3(1.0f, 1.0f, 1.0f));
-        shader.setUniform("Material.Ks", 0.95f, 0.95f, 0.95f);
+        shader.setUniform("Material.Ks", 0.3f, 0.3f, 0.3f);
         shader.setUniform("Material.Ka", 0.2f * 0.3f, 0.55f * 0.3f, 0.9f * 0.3f);
-        shader.setUniform("Material.Shininess", 100.0f);
+        shader.setUniform("Material.Shininess", 20.0f);
 
+
+        // Alter the Poisition/Rotation/Size of the Mesh/Model
         model = mat4(1.0f);
-
-        //Change the location (X.Y.Z) of the mesh object
-        model = glm::translate(model, vec3(-20.0f, -20.0f, -20.0f));
-
-        //Rotate the mesh object
-        model = glm::rotate(model, glm::radians(135.0f), vec3(0.0f, 1.0f, 0.0f));
+        model = glm::translate(model, vec3(-3.0f, 0.0f, -3.0f));
+        model = glm::rotate(model, glm::radians(120.0f), vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
-
-        //Change the size of the mesh object
         model = glm::scale(model, vec3(1.0f, 1.0f, 1.0f));
+
+
+        //Load Matrices Settings & Render Island Mesh
         setMatrices();
         islandMesh->render();
+    #pragma endregion
+
+
+     #pragma region Tree Models Settings
+        // Alter the Diffuse/Spectural/Ambient Light Reflective Power
+        // Alter the Shininess (Glossy Look) of Spectural Light
+        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
+        shader.setUniform("Material.Ks", 0.3f, 0.3f, 0.3f);
+        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
+        // Alter the Poisition/Rotation/Size of the Mesh/Model
+        model = mat4(1.0f);
+        model = glm::translate(model, vec3(-12.0f, 8.5f, -2.5f));
+        model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, vec3(0.5f, 0.5f, 0.5f));
+
+        //Load Matrices Settings & Render Tree Mesh
+        setMatrices();
+        treeMesh->render();
 
 
 
         shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
         shader.setUniform("Material.Ks", 0.9f, 0.9f, 0.9f);
         shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
-        shader.setUniform("Material.Shininess", 180.0f);
+        shader.setUniform("Material.Shininess", 20.0f);
 
         model = mat4(1.0f);
-        model = glm::translate(model, vec3(-10.0f, -13.5f, -12.0f));
+        model = glm::translate(model, vec3(-2.0f, 4.8f, 0.0f));
         model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
         model = glm::scale(model, vec3(0.5f, 0.5f, 0.5f));
+
+        //Load Matrices Settings & Render Tree Mesh
         setMatrices();
         treeMesh->render();
 
-    }
-    #pragma endregion
 
 
-
-    // THIS IS THE SPOTLIGHT SETTINGS
-    #pragma region BLINN PHONG SHADER SETTINGS & MODELS
-    if (switchShader_to_blinnPhongSpotlight == true)
-    {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        vec4 lightPos = vec4(10.0f * cos(angle), 10.0f, 10.0f * sin(angle), 1.0f);
-        shader.setUniform("Spot.Position", vec3(view * lightPos));
-        mat3 normalMatrix = mat3(vec3(view[0]), vec3(view[1]), vec3(view[2]));
-
-        shader.setUniform("Spot.Direction", normalMatrix * vec3(-lightPos));
-
-        shader.setUniform("Material.Kd", teapotColour);
-        shader.setUniform("Material.Ks", 0.95f, 0.95f, 0.95f);
-        shader.setUniform("Material.Ka", 0.2f * 0.3f, 0.55f * 0.3f, 0.9f * 0.3f);
-        shader.setUniform("Material.Shininess", 100.0f);
-
-        model = mat4(1.0f);
-        model = glm::translate(model, vec3(0.0f, 0.0f, -2.0f));
-        model = glm::rotate(model, glm::radians(45.0f), vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
-        setMatrices();
-        teapot.render();
-
-        shader.setUniform("Material.Kd", torusColour);
-        shader.setUniform("Material.Ks", 0.95f, 0.95f, 0.95f);
-        shader.setUniform("Material.Ka", 0.2f * 0.3f, 0.55f * 0.3f, 0.9f * 0.3f);
-        shader.setUniform("Material.Shininess", 100.0f);
-
-        model = mat4(1.0f);
-        model = glm::translate(model, vec3(-1.0f, 0.75f, 3.0f));
-        model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
-        setMatrices();
-        torus.render();
-
-
-        shader.setUniform("Material.Kd", planeColour);
+        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
         shader.setUniform("Material.Ks", 0.9f, 0.9f, 0.9f);
-        shader.setUniform("Material.Ka", 0.2f, 0.2f, 0.2f);
-        shader.setUniform("Material.Shininess", 180.0f);
+        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
 
         model = mat4(1.0f);
-        setMatrices();
-        plane.render();
+        model = glm::translate(model, vec3(1.0f, 5.0f, -2.0f));
+        model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, vec3(0.5f, 0.5f, 0.5f));
 
-    }
+        //Load Matrices Settings & Render Tree Mesh
+        setMatrices();
+        treeMesh->render();
+
+
+
+        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
+        shader.setUniform("Material.Ks", 0.9f, 0.9f, 0.9f);
+        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
+
+        model = mat4(1.0f);
+        model = glm::translate(model, vec3(3.0f, 4.5f, 8.0f));
+        model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, vec3(0.5f, 0.5f, 0.5f));
+
+        //Load Matrices Settings & Render Tree Mesh
+        setMatrices();
+        treeMesh->render();
+
+
+
+        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
+        shader.setUniform("Material.Ks", 0.9f, 0.9f, 0.9f);
+        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
+
+        model = mat4(1.0f);
+        model = glm::translate(model, vec3(4.0f, 4.5f, 4.0f));
+        model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, vec3(0.2f, 0.2f, 0.2f));
+
+        //Load Matrices Settings & Render Tree Mesh
+        setMatrices();
+        treeMesh->render();
+
+
+
+        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
+        shader.setUniform("Material.Ks", 0.9f, 0.9f, 0.9f);
+        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
+
+        model = mat4(1.0f);
+        model = glm::translate(model, vec3(6.0f, 4.5f, 6.0f));
+        model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, vec3(0.3f, 0.3f, 0.3f));
+
+        //Load Matrices Settings & Render Tree Mesh
+        setMatrices();
+        treeMesh->render();
+
+
+
+        shader.setUniform("Material.Kd", 0.4f, 0.4f, 0.4f);
+        shader.setUniform("Material.Ks", 0.9f, 0.9f, 0.9f);
+        shader.setUniform("Material.Ka", 0.5f, 0.5f, 0.5f);
+        shader.setUniform("Material.Shininess", 20.0f);
+
+
+        model = mat4(1.0f);
+        model = glm::translate(model, vec3(2.0f, 4.2f, 6.0f));
+        model = glm::rotate(model, glm::radians(0.0f), vec3(1.0f, 0.0f, 0.0f));
+        model = glm::scale(model, vec3(0.3f, 0.3f, 0.3f));
+
+        //Load Matrices Settings & Render Tree Mesh
+        setMatrices();
+        treeMesh->render();
     #pragma endregion
-
-
-
-    //THIS IS THE TOON SPOTLIGHT CODE
-    #pragma region TOON SHADER SETTINGS & MODELS
-    if (switchShader_to_bpToonSpotlight == true)
-    {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        vec4 lightPos = vec4(10.0f * cos(angle), 10.0f, 10.0f * sin(angle), 1.0f);
-        shader.setUniform("Light.Position", view* lightPos);
-
-        shader.setUniform("Material.Kd", teapotColour);
-        shader.setUniform("Material.Ka", 0.9f * 0.3f, 0.5f * 0.3f, 0.3f * 0.3f);
-
-        model = mat4(1.0f);
-        model = glm::translate(model, vec3(0.0f, 0.0f, -2.0f));
-        model = glm::rotate(model, glm::radians(45.0f), vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
-        setMatrices();
-        teapot.render();
-
-        shader.setUniform("Material.Kd", torusColour);
-        shader.setUniform("Material.Ka", 0.9f * 0.3f, 0.5f * 0.3f, 0.3f * 0.3f);
-
-        model = mat4(1.0f);
-        model = glm::translate(model, vec3(-1.0f, 0.75f, 3.0f));
-        model = glm::rotate(model, glm::radians(-90.0f), vec3(1.0f, 0.0f, 0.0f));
-        setMatrices();
-        torus.render();
-
-        shader.setUniform("Material.Kd", planeColour);
-        shader.setUniform("Material.Ka", 0.2f, 0.2f, 0.2f);
-
-        model = mat4(1.0f);
-        setMatrices();
-        plane.render();
     }
-    #pragma endregion
 
+    #pragma region ImGUI Elements
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -358,36 +386,27 @@ void SceneBasic_Uniform::render()
     {
         ImGui::Begin("Dynamic Shader Representation Tool - Editor Window"); // Create Window - Title: Super Dodger
 
-        ImGui::ColorEdit3("Change Teapot Colour: ", (float*)&teapotColour);
-        ImGui::ColorEdit3("Change Torus Colour: ", (float*)&torusColour);
-        ImGui::ColorEdit3("Change Plane Colour: ", (float*)&planeColour);
-
-
-        if (ImGui::Button("Change Shader To Blinn Phong - Spotlight"))
+        ImGui::Checkbox("Toggle Animation", &m_animate);
+        if (ImGui::Button("Toggle Music"))
         {
-            switchShader_to_blinnPhongSpotlight = true;
-            switchShader_to_phongDirectional = false;
-            switchShader_to_bpToonSpotlight = false;
- 
+            if (toggleCurrentMusic == true)
+            {
+                //Turn music off
+                toggleCurrentMusic = false;
+                toggleMusic();
+            }
+            else 
+            {
+                //Turn music on
+                toggleCurrentMusic = true;
+                toggleMusic();
+            }
         }
-
-        if (ImGui::Button("Change Shader To Phong - Directional"))
+        if (ImGui::Button("Exit Application"))
         {
-            switchShader_to_phongDirectional = true;
-            switchShader_to_blinnPhongSpotlight = false;
-            switchShader_to_bpToonSpotlight = false;
-
+            exit(EXIT_SUCCESS);
         }
-
-        if (ImGui::Button("Change Shader To BP Toon - Directional"))
-        {
-            switchShader_to_phongDirectional = false;
-            switchShader_to_blinnPhongSpotlight = false;
-            switchShader_to_bpToonSpotlight = true;
-        }
-
-        //ImGui::ChangeCameraSpeed("Player Speed", &camera.cameraSpeed, 0.0f, 100.0f); // Player can alter the speed of the camera
-        //ImGui::BackgroundColour("Background Colour", (float*)&clear_BackgroundColour); // Change the RGB values of the background
+        
 
         ImGui::Text("Average Framerate: %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate); // Dispplay the framerate
         ImGui::End();
@@ -397,7 +416,11 @@ void SceneBasic_Uniform::render()
 
 
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    #pragma endregion
 }
+
+
+
 
 void SceneBasic_Uniform::setMatrices()
 {
@@ -410,10 +433,107 @@ void SceneBasic_Uniform::setMatrices()
     shader.setUniform("MVP", projection * mv); //we set the model view matrix by multiplying the mv with the projection matrix
 }
 
+
+
+
 void SceneBasic_Uniform::resize(int w, int h)
 {
     glViewport(0, 0, w, h);
     width = w;
     height = h;
-    projection = glm::perspective(glm::radians(70.0f), (float)w / h, 0.3f, 100.0f);
+    projection = glm::perspective(glm::radians(90.0f), (float)w / h, 0.3f, 100.0f);
+}
+
+
+
+
+void SceneBasic_Uniform::refreshShader()
+{
+
+    mat4 directionalView = glm::lookAt(vec3(4.0f, 4.0f, 6.5f), vec3(0.0f, 0.75f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view = glm::lookAt(vec3(5.0f, 5.0f, 7.5f), vec3(0.0f, 0.75f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+
+    projection = mat4(1.0f);
+    angle = 0.0;
+
+#pragma region Directional Lighting - Phong Shading
+    // Alters the position of the light, the specular settings, and the ambient settings 
+    if (switchShader_to_phongDirectional == true || switchShader_to_bpToonSpotlight == true)
+    {
+        shader.setUniform("Light.Position", directionalView * glm::vec4(1.0f, 25.0f, 0.0f, 0.0f));
+        shader.setUniform("Light.L", vec3(0.9f, 0.9f, 0.9f));
+        shader.setUniform("Light.La", vec3(1.0f));
+
+    }
+#pragma endregion
+
+
+#pragma region Spotlight Lighting - Blinn Phong Shading
+    // Alters the specular settings, ambient light,
+    if (switchShader_to_blinnPhongSpotlight == true)
+    {
+        shader.setUniform("Spot.L", vec3(0.8f));
+        shader.setUniform("Spot.La", vec3(0.5f));
+        shader.setUniform("Spot.Exponent", 20.0f);
+        shader.setUniform("Spot.Cutoff", glm::radians(30.0f));
+
+        // Load diffuse texture
+        GLuint diffuseTexture = Texture::loadTexture("media/texture/ogre_diffuse.png");
+
+        // Load normal map
+        GLuint normalMapTexture = Texture::loadTexture("media/texture/ogre_normalmap.png");
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, diffuseTexture);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, normalMapTexture);
+    }
+    else
+    {
+        shader.setUniform("Fog.MaxDist", 11.5f);
+        shader.setUniform("Fog.MinDist", 0.0f);
+        shader.setUniform("Fog.Color", 0.2f, 0.5f, 0.9f);
+
+        // Load texture and bind it to the active meshes
+        GLuint texID = Texture::loadTexture("media/nice69-32x.png");
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texID);
+
+    }
+#pragma endregion
+
+}
+
+
+
+
+void SceneBasic_Uniform::toggleMusic()
+{
+    if (toggleCurrentMusic == true) 
+    {
+        // Loop background music in game and set the volume
+        music = backgoundMusic->play2D("media/audio/Dreamer-by-Hazy.flac", true, false, true);
+        music->setVolume(0.07f);
+    }
+    else 
+    {
+        music->stop();
+    }
+
+}
+
+
+
+
+void SceneBasic_Uniform::ImGuiSetup()
+{
+    // Initialising ImGUI
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init();
+
 }

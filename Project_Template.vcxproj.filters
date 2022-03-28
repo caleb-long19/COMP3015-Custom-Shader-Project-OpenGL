@@ -49,11 +49,14 @@
     <Filter Include="helper\texture\cube\customSkybox">
       <UniqueIdentifier>{85aad866-4f84-4fd1-bdd4-0b9d2176836b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\Spotlight Shaders">
+      <UniqueIdentifier>{d25d7060-115c-43c2-9758-4814e751f354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\Directional Lighting">
+      <UniqueIdentifier>{ac768483-a7b8-45c4-a153-1cae80c5dacd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -116,12 +119,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader\basic_uniform.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shader\basic_uniform.vert">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="C:\Users\caleb\Downloads\COMP3015\Lab 4\Lab 4 Files\Additional files\texture\cube\pisa-hdr\pisa_negx.hdr">
       <Filter>helper\texture\cube\pisa-hdr</Filter>
     </None>
@@ -141,22 +138,22 @@
       <Filter>helper\texture\cube\pisa-hdr</Filter>
     </None>
     <None Include="shader\blinnPhongShader.frag">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Spotlight Shaders</Filter>
     </None>
     <None Include="shader\blinnPhongShader.vert">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Spotlight Shaders</Filter>
     </None>
-    <None Include="shader\flatShader.frag">
-      <Filter>shaders</Filter>
+    <None Include="shader\phongShader.frag">
+      <Filter>shaders\Directional Lighting</Filter>
     </None>
-    <None Include="shader\flatShader.vert">
-      <Filter>shaders</Filter>
+    <None Include="shader\phongShader.vert">
+      <Filter>shaders\Directional Lighting</Filter>
     </None>
     <None Include="shader\bpToonShader.frag">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Directional Lighting</Filter>
     </None>
     <None Include="shader\bpToonShader.vert">
-      <Filter>shaders</Filter>
+      <Filter>shaders\Directional Lighting</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
