@@ -22,14 +22,17 @@ DSR Tool is an application that is used to display imported models and allow the
 - Normal Textures (Ogre Model - Given via Lab Work) 
 
 ### Screenshots
+#### User Interface
+<kbd>![DSRT - Introduction](Screenshots/User_Input_Shader_Selection.png?)</kbd>
+
 #### Toon Shading
-
-
-#### Blinn Phong Normal Texture Shading
-
+<kbd>![Toon Shading](Screenshots/Toon_Shader.png?)</kbd>
 
 #### Phong Shading
+<kbd>![Phong Directional Shading](Screenshots/Phong_Directional_Shading.png?)</kbd>
 
+#### Blinn Phong Normal Texture Shading
+<kbd>![Blinn Phong Normal Texture Shading](Screenshots/BP_Normal_Shading.png?)</kbd>
 
 ### References
 #### YouTube Channels
